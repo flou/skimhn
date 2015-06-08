@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-	<title>Skim HN</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Skim HN shows latest Hacker News submissions sorted by categories.">
-	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<link rel="shortcut icon" href="favicon.ico"/>
-	<style type="text/css">
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title>Skim HN</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Skim HN shows latest Hacker News submissions sorted by categories.">
+  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link rel="shortcut icon" href="favicon.ico"/>
+  <style type="text/css">
   h4 {margin-bottom: 20px; font-weight: 300;}
   div.row {margin-bottom: 40px;}
-	.hnitems {list-style-type: none; margin: 0; padding: 0;}
+  .hnitems {list-style-type: none; margin: 0; padding: 0;}
   .hnitems li {line-height: 24px;}
   .hnscore {padding-right: 6px;}
-	@media (min-width: 768px) {
-		.hnitems li {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}		
-	}
+  @media (min-width: 768px) {
+    .hnitems li {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+  }
   body.skimdark {background-color: #1b1e20;}
   .skimdark .container {color: #fff; font-weight: 300;}
   .skimdark .hnnew {color: #ccc;}
@@ -26,7 +26,7 @@
       text-decoration: none;
       color: #cb553e;
   }
-	</style>
+  </style>
 </head>
 <body>
 <script type="text/javascript">
@@ -41,24 +41,22 @@ if(darkTheme) {
 }
 </script>
 <div class="container">
-	<div id="main"></div>
-	<div class="row">
-		<div class="span2"><button type="button" data-toggle="modal" data-target="#add" class="btn btn-block">Add</button></div>
-	</div>
-	<hr>
-	<footer>
+  <div id="main"></div>
+  <div class="row">
+    <div class="span2"><button type="button" data-toggle="modal" data-target="#add" class="btn btn-block">Add</button></div>
+  </div>
+  <hr>
+  <footer>
     <h5>Settings</h5>
     <p><label class="checkbox"><input type="checkbox" class="toggle-newwindow"> Open links in new window</label></p>
     <p><label class="checkbox"><input type="checkbox" class="toggle-theme"> Dark theme</label></p>
-		<h5>About</h5>
-		<p>Skim HN shows latest Hacker News submissions sorted by categories.</p>
-		<p>Inspired by <a href="http://skimfeed.com/">SkimFeed</a>.</p>
-		<p>Powered by HN users, <a href="http://www.hnsearch.com/api">HNSearch API</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, <a href="http://jquery.com/">jQuery</a>.</p>
+    <h5>About</h5>
+    <p>Skim HN shows latest Hacker News submissions sorted by categories.</p>
+    <p>Inspired by <a href="http://skimfeed.com/">SkimFeed</a>.</p>
+    <p>Powered by HN users, <a href="http://www.hnsearch.com/api">HNSearch API</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, <a href="http://jquery.com/">jQuery</a>.</p>
     <p>Dark theme and styling inspired by <a href="http://news.ycombinator.com/user?id=rumberg">rumberg</a>'s <a href="http://news.ycombinator.com/item?id=5188175">redesign</a>.</p>
-		<p>Skim HN is not affiliated with Y Combinator in any way.</p>
-		<p><a href="mailto:ray@skimhn.com">ray@skimhn.com</a></p>
-		<p><a href="https://github.com/raimondsp/skimhn">https://github.com/raimondsp/skimhn</a></p>
-	</footer>
+    <p>Skim HN is not affiliated with Y Combinator in any way.</p>
+  </footer>
 </div>
 
 <div id="add" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
@@ -67,14 +65,14 @@ if(darkTheme) {
     <h3 id="addLabel">Add</h3>
   </div>
   <div class="modal-body">
-	<form>
-	    <label>Title</label>
-	    <input type="text" id="cattitle" class="input-xxlarge">
-	    <label>Query</label>
-	    <input type="text" id="catquery" class="input-xxlarge">
-	    <span class="help-block">Fields: points, username, url, domain, title, num_comments, text (e.g. num_comments:[50 TO *] AND title:android).</span>
-	  </fieldset>
-	</form>
+  <form>
+    <fieldset>
+      <label>Title</label>
+      <input type="text" id="cattitle" class="input-xxlarge">
+      <label>Query</label>
+      <input type="text" id="catquery" class="input-xxlarge">
+    </fieldset>
+  </form>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -88,15 +86,15 @@ if(darkTheme) {
     <h3 id="editLabel">Edit</h3>
   </div>
   <div class="modal-body">
-	<form>
-	    <label>Title</label>
-	    <input type="text" id="cattitle" class="input-xxlarge">
-	    <label>Query</label>
-	    <input type="text" id="catquery" class="input-xxlarge">
-	    <span class="help-block">Fields: points, username, url, domain, title, num_comments, text (e.g. num_comments:[50 TO *] AND title:android).</span>
-	    <input type="hidden" id="catindex">
-	  </fieldset>
-	</form>
+  <form>
+    <fieldset>
+      <label>Title</label>
+      <input type="text" id="cattitle" class="input-xxlarge">
+      <label>Query</label>
+      <input type="text" id="catquery" class="input-xxlarge">
+      <input type="hidden" id="catindex">
+    </fieldset>
+  </form>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -107,156 +105,6 @@ if(darkTheme) {
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script type="text/javascript">
-// default layout
-var layout = [
-	{title: "Show HN", query: "title:\"Show HN\""},
-	{title: "Self HN", query: "-domain:*"},
-	{title: "YC, PG", query: "title:YC OR title:PG OR username:pg"},
-	{title: "50+ points", query: "points:[50 TO *]"},
-	{title: "GitHub", query: "domain:github.com OR domain:*.github.com"},
-	{title: "Ruby, Rails", query: "title:ruby OR title:rails OR title:ror"},
-	{title: "Stack Exchange", query: "domain:stackoverflow.com OR domain:stackexchange.com OR domain:*.stackexchange.com OR domain:superuser.com OR domain:serverfault.com"},
-	{title: "iTunes", query: "domain:itunes.apple.com"},
-	{title: "Chrome Web Store", query: "domain:chrome.google.com"},
-	{title: "Crowd funding", query: "domain:kickstarter.com OR domain:indiegogo.com"},
-	{title: "Meetup", query: "domain:meetup.com OR title:meetup"},
-	{title: "Wikipedia", query: "domain:en.wikipedia.org"},
-	{title: "Videos", query: "domain:youtube.com OR domain:youtu.be OR domain:vimeo.com OR domain:ted.com"},
-	{title: "Scientific", query: "domain:nature.com OR domain:sciencedaily.com OR domain:newscientist.com OR domain:phys.org OR domain:scientificamerican.com OR domain:popsci.com"},
-	{title: ".edu", query: "domain:*.edu"}
-];
-// check if layout is already in localStorage
-if(!('layout' in localStorage)) {
-	localStorage['layout'] = JSON.stringify(layout);
-} else {
-	layout = JSON.parse(localStorage['layout']);
-}
-// initialize 'seen' array for storing last seen ids
-var seen = {};
-if(!('seen' in localStorage)) {
-	localStorage['seen'] = JSON.stringify(seen);
-} else {
-	seen = JSON.parse(localStorage['seen']);
-}
-// setup new window toggle
-var newWindow = false;
-if(!('newWindow' in localStorage)) {
-  localStorage['newWindow'] = JSON.stringify(newWindow);
-} else {
-  newWindow = JSON.parse(localStorage['newWindow']);
-}
-$('.toggle-newwindow').prop('checked', newWindow);
-$('.toggle-newwindow').change(function(e) {
-  newWindow = newWindow ? false : true;
-  localStorage['newWindow'] = JSON.stringify(newWindow);
-  if(newWindow) {
-    $('.hnitems a').attr('target', '_blank');
-  } else {
-    $('.hnitems a').removeAttr('target');
-  }
-});
-$('.toggle-theme').prop('checked', darkTheme);
-$('.toggle-theme').change(function(e) {
-  darkTheme = darkTheme ? false : true;
-  localStorage['darkTheme'] = JSON.stringify(darkTheme);
-  if(darkTheme) {
-    $('body').addClass('skimdark');
-  } else {
-    $('body').removeClass('skimdark');
-  }
-});
-var raw = $('<div class="row"></div>');
-// add layout items to dom
-for (var i = 0; i < layout.length; i++) {
-	var span = $('<div class="span6"><h4 class="hncat"></h4><ul class="hnitems"></ul></div>');
-	$('h4.hncat', span).text(layout[i].title).append(' <small><a class="hnedit muted" href="#edit" data-index="'+i+'">/edit</a></small>');
-	$('ul.hnitems', span).attr('data-query', layout[i].query);
-	raw.append(span);
-	// 2 columns in raw
-	if (i%2 == 1 || i == layout.length-1) {
-		$('#main').append(raw);
-		raw = $('<div class="row"></div>');
-	};
-};
-$('a.hnedit').click(function(e){
-	e.preventDefault();
-	var i = $(this).attr('data-index');
-	$('#edit #cattitle').val(layout[i].title);
-	$('#edit #catquery').val(layout[i].query);
-	$('#edit #catindex').val(i);
-	$('#edit').modal('show');
-});
-$('#edit button.btn-primary').click(function(e){
-	var i = $('#edit #catindex').val();
-	layout[i].title = $('#edit #cattitle').val();
-	layout[i].query = $('#edit #catquery').val();
-	localStorage['layout'] = JSON.stringify(layout);
-	$('#edit').modal('hide');
-	window.location.reload(false);
-});
-$('#edit button.btn-danger').click(function(e){
-	var i = $('#edit #catindex').val();
-	layout.splice(i,1);
-	localStorage['layout'] = JSON.stringify(layout);
-	$('#edit').modal('hide');
-	window.location.reload(false);
-});
-$('#add button.btn-primary').click(function(e){
-	layout.push({title: $('#add #cattitle').val(), query: $('#add #catquery').val()});
-	localStorage['layout'] = JSON.stringify(layout);
-	$('#edit').modal('hide');
-	window.location.reload(false);
-});
-// process layout
-$('ul.hnitems').each(function(){
-	var ul = $(this);
-	$.ajax({
-		url: 'http://api.thriftdb.com/api.hnsearch.com/items/_search',
-		type: 'GET',
-		dataType: 'jsonp',
-		data: {
-			'filter[fields][type]': 'submission',
-			'filter[queries][]': $(this).attr('data-query'),
-			'sortby': 'create_ts desc',
-			'limit': 10
-		},
-		success: function(data) {
-			var query = ul.attr('data-query');
-			if (!(query in seen)) {
-				seen[query] = data.results[0].item.id;
-			};
-			for (var i = 0; i < data.results.length; i++) {
-				var li = $('<li><span class="hnnew"></span><a class="hnscore muted"></a> <a class="hntitle"></a></li>');
-				if(data.results[i].item.id > seen[query]) {
-					$('span.hnnew', li).text('+ ');
-				}
-				$('a.hnscore', li).text(''+data.results[i].item.points+'/'+data.results[i].item.num_comments+'').attr('href', 'http://news.ycombinator.com/item?id='+data.results[i].item.id);
-				$('a.hntitle', li).text(data.results[i].item.title).attr('title', data.results[i].item.title).attr('href', data.results[i].item.url ? data.results[i].item.url : 'http://news.ycombinator.com/item?id='+data.results[i].item.id);
-        if(newWindow) {
-          $('a', li).attr('target', '_blank');
-        }
-				$(ul).append(li);
-			};
-			seen[query] = data.results[0].item.id;
-			localStorage['seen'] = JSON.stringify(seen);
-		} 
-	});
-});
-</script>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38317802-1']);
-  _gaq.push(['_setDomainName', 'skimhn.com']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+<script src="js/hn.js"></script>
 </body>
 </html>
