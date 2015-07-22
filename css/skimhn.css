@@ -1,0 +1,18 @@
+h4 {margin-bottom: 20px; font-weight: 300;}
+div.row {margin-bottom: 40px;}
+.hnitems {list-style-type: none; margin: 0; padding: 0;}
+.hnitems li {line-height: 24px;}
+.hnscore {padding-right: 6px;}
+@media (min-width: 768px) {
+  .hnitems li {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+}
+body.skimdark {background-color: #1b1e20;}
+.skimdark .container {color: #fff; font-weight: 300;}
+.skimdark .hnnew {color: #ccc;}
+.skimdark a {color: #ccc;}
+.skimdark a.hnedit, .skimdark a.hnscore {color: #666;}
+.skimdark a:hover {
+    border-bottom: none;
+    text-decoration: none;
+    color: #cb553e;
+}
