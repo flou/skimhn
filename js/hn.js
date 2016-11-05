@@ -91,6 +91,7 @@ function display_news(seen) {
           $('a.hntitle', li).text(data.hits[i].title).attr('title', data.hits[i].title).attr('href', data.hits[i].url ? data.hits[i].url : 'http://news.ycombinator.com/item?id='+data.hits[i].objectID);
           if (newWindow) {
             $('a', li).attr('target', '_blank');
+            $('a', li).attr('rel', 'noopener noreferrer');
           }
           $(ul).append(li);
         };
