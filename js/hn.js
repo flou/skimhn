@@ -19,28 +19,24 @@ function getLayout() {
   var layout = [
     { title: "Show HN", query: "\"Show HN\"" },
     { title: "GitHub", query: "domain:github.com" },
-    { title: "Ruby on Rails", query: "\"rails\"" },
-    { title: "Ruby", query: "\"ruby\"" },
-    { title: "Mac OSX", query: "\"os x\"" },
-    { title: "Java", query: "java" },
-    { title: "Crowd funding", query: "domain:kickstarter.com" },
-    { title: "Javascript", query: "javascript js coffeescript" },
-    { title: "Sublime Text", query: "Sublime Text" },
+    { title: "AWS", query: "aws" },
+    { title: "Elixir", query: "elixir" },
+    { title: "Ruby on Rails", query: "rails" },
+    { title: "Ruby", query: "ruby" },
+    { title: "Mac OSX", query: "macos" },
+    { title: "Sublime Text", query: "\"Sublime Text\"" },
     { title: "Devops", query: "devops" },
     { title: "Docker", query: "docker" },
-    { title: "Google Play Store", query: "domain:play.google.com" },
-    { title: "iTunes", query: "domain:itunes.apple.com" },
     { title: "Python", query: "python" },
     { title: "50+ points", query: "points:>50" },
     { title: "100+ points", query: "points:>100" },
     { title: "Reddit", query: "domain:reddit.com" },
+    { title: "Crowd funding", query: "domain:kickstarter.com" },
     { title: "Stack Overflow", query: "domain:stackoverflow.com" },
     { title: "Agile", query: "agile" },
     { title: "Ansible", query: "ansible" },
-    { title: "Crystal", query: "\"crystal\"" },
-    { title: "AWS", query: "\"aws\"" },
-    { title: "Elixir", query: "\"elixir\"" },
-    { title: "Swift", query: "\"swift\"" }
+    { title: "Crystal", query: "crystal" },
+    { title: "Swift", query: "swift" }
   ];
   if ('layout' in localStorage) {
     layout = JSON.parse(localStorage['layout']);
