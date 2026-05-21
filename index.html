@@ -1,92 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-  <title>Skim HN</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Skim HN shows latest Hacker News submissions sorted by categories.">
-  <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <link href="css/skimhn.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="favicon.ico"/>
-</head>
-<body>
-  <script type="text/javascript">
-  var darkTheme = false;
-  if (!('darkTheme' in localStorage)) {
-    localStorage['darkTheme'] = JSON.stringify(darkTheme);
-  } else {
-    darkTheme = JSON.parse(localStorage['darkTheme']);
-  }
-  if (darkTheme) {
-    document.getElementsByTagName("body")[0].className += 'skimdark';
-  }
-  </script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Skim HN shows latest Hacker News submissions sorted by categories." />
+        <title>Skim HN</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="shortcut icon" href="favicon.ico" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Skim HN</h1>
+                <div class="actions">
+                    <button id="add-btn" class="btn">Add</button>
+                </div>
+            </header>
 
-  <div class="container">
-    <div id="main"></div>
-    <div class="row">
-      <div class="span2"><button type="button" data-toggle="modal" data-target="#add" class="btn btn-block">Add</button></div>
-    </div>
-    <hr>
-    <footer>
-      <h5>Settings</h5>
-      <p><label class="checkbox"><input type="checkbox" class="toggle-newwindow"> Open links in new window</label></p>
-      <p><label class="checkbox"><input type="checkbox" class="toggle-theme"> Dark theme</label></p>
-      <h5>About</h5>
-      <p>Skim HN shows latest Hacker News submissions sorted by categories.</p>
-      <p>Inspired by <a href="http://skimfeed.com/">SkimFeed</a>.</p>
-      <p>Powered by HN users, <a href="https://hn.algolia.com/api">Algolia HN Search API</a>, <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>, <a href="http://jquery.com/">jQuery</a>.</p>
-      <p>Dark theme and styling inspired by <a href="http://news.ycombinator.com/user?id=rumberg">rumberg</a>'s <a href="http://news.ycombinator.com/item?id=5188175">redesign</a>.</p>
-      <p>Skim HN is not affiliated with Y Combinator in any way.</p>
-    </footer>
-  </div>
+            <main>
+                <div id="grid" class="grid"></div>
+            </main>
 
-  <div id="add" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="addLabel">Add</h3>
-    </div>
-    <div class="modal-body">
-      <form>
-        <fieldset>
-          <label>Title</label>
-          <input type="text" id="cattitle" class="input-xxlarge">
-          <label>Query</label>
-          <input type="text" id="catquery" class="input-xxlarge">
-        </fieldset>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save changes</button>
-    </div>
-  </div>
+            <hr />
 
-  <div id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="editLabel">Edit</h3>
-    </div>
-    <div class="modal-body">
-      <form>
-        <fieldset>
-          <label>Title</label>
-          <input type="text" id="cattitle" class="input-xxlarge">
-          <label>Query</label>
-          <input type="text" id="catquery" class="input-xxlarge">
-          <input type="hidden" id="catindex">
-        </fieldset>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save changes</button>
-      <button class="btn btn-danger pull-left">Delete</button>
-    </div>
-  </div>
+            <footer>
+                <h3>Settings</h3>
+                <p>
+                    <label>
+                        <input type="checkbox" id="theme-toggle" />
+                        Dark theme
+                    </label>
+                </p>
+            </footer>
+        </div>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/hn.js"></script>
-</body>
+        <div id="edit-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="modal-title">Edit</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <label for="edit-title">Title</label>
+                    <input type="text" id="edit-title" class="input-full" />
+                    <label for="edit-query">Query</label>
+                    <input type="text" id="edit-query" class="input-full" />
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <button id="edit-delete" class="btn btn-danger">Delete</button>
+                    </div>
+                    <div class="right">
+                        <button class="btn modal-cancel">Cancel</button>
+                        <button id="edit-save" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="js/main.js"></script>
+    </body>
 </html>
