@@ -1,7 +1,7 @@
 :root {
     --bg: #fff;
     --text: #222;
-    --muted: #999;
+    --muted: #666;
     --link: #1a0dab;
     --link-hover: #cb553e;
     --new: #e68a00;
@@ -22,16 +22,16 @@
     --bg: #1b1e20;
     --text: #fff;
     --muted: #666;
-    --link: #ccc;
+    --link: #ddd;
     --link-hover: #cb553e;
-    --new: #ccc;
-    --border: #333;
+    --new: #ffa500;
+    --border: #444;
     --card-bg: #1b1e20;
     --footer-text: #999;
-    --input-bg: #2a2e30;
-    --input-border: #444;
-    --btn-bg: #333;
-    --btn-border: #444;
+    --input-bg: #333;
+    --input-border: #555;
+    --btn-bg: #444;
+    --btn-border: #555;
 }
 
 *,
@@ -129,9 +129,10 @@ header h1 {
 }
 
 .card-list .meta {
-    padding-right: 6px;
+    margin-right: 10px;
     color: var(--muted);
     font-size: 12px;
+    font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", Menlo, Consolas, monospace;
 }
 
 .card-list .meta:hover {

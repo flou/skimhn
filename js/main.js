@@ -1,42 +1,93 @@
-const ALGOLIA_URL = "https://hn.algolia.com/api/v1/search_by_date?tags=story";
+const ALGOLIA_BASE = "https://hn.algolia.com/api/v1/search_by_date";
 
 function buildAlgoliaQuery(q) {
-  const match = q.match(/^((\w+):)?(.*)$/);
-  const type = match[2];
-  const topic = match[3];
-  let query = "";
-
-  if (type === "domain") {
-    query += "&restrictSearchableAttributes=url&query=";
-  } else if (type === "points") {
-    query += "&numericFilters=" + type;
-  } else {
-    query += "&query=";
+  if (q.startsWith("any:")) {
+    const terms = q
+      .slice(4)
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    return terms.map((t) => `${ALGOLIA_BASE}?tags=story&query=${t}&hitsPerPage=30`);
   }
 
-  return `${ALGOLIA_URL}${query}${topic}&hitsPerPage=30`;
+  const segments = q
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const knownTypes = ["tag", "author", "domain", "points"];
+  const allTyped = segments.every((s) => knownTypes.some((t) => s.startsWith(t + ":")));
+
+  if (allTyped) {
+    const tags = ["story"];
+    const numericFilters = [];
+    let domain = null;
+
+    for (const seg of segments) {
+      const [, type, value] = seg.match(/^(\w+):(.*)$/) || [];
+      switch (type) {
+        case "tag":
+          tags.push(value);
+          break;
+        case "author":
+          tags.push("author_" + value);
+          break;
+        case "domain":
+          domain = value;
+          break;
+        case "points":
+          numericFilters.push("points" + value);
+          break;
+      }
+    }
+
+    let url = ALGOLIA_BASE + "?tags=" + tags.join(",");
+    if (numericFilters.length) url += "&numericFilters=" + numericFilters.join(",");
+    if (domain) url += "&restrictSearchableAttributes=url&query=" + domain;
+    url += "&hitsPerPage=30";
+    return url;
+  }
+
+  return `${ALGOLIA_BASE}?tags=story&query=${q}&hitsPerPage=30`;
+}
+
+function mergeResults(results) {
+  const seen = new Set();
+  const hits = [];
+  for (const r of results) {
+    for (const h of r.hits || []) {
+      if (!seen.has(h.objectID)) {
+        seen.add(h.objectID);
+        hits.push(h);
+      }
+    }
+  }
+  hits.sort((a, b) => b.created_at_i - a.created_at_i);
+  return { hits: hits.slice(0, 30) };
 }
 
 function getDefaultLayout() {
   return [
-    { title: "Show HN", query: '"Show HN"' },
+    { title: "Show HN", query: "tag:show_hn" },
     { title: "GitHub", query: "domain:github.com" },
+    { title: "50+ points", query: "points:>50,points:<100" },
+    { title: "100+ points", query: "points:>100" },
+    { title: "Front Page", query: "tag:front_page" },
+    { title: "macOS", query: '"macos"' },
     { title: "AWS", query: '"aws"' },
     { title: "GCP", query: '"gcp"' },
-    { title: "50+ points", query: "points:>50" },
-    { title: "100+ points", query: "points:>100" },
     { title: "Devops", query: '"devops"' },
+    { title: "SRE", query: '"sre"' },
     { title: "Kubernetes", query: "kubernetes" },
-    { title: "macOS", query: '"macos"' },
-    { title: "Terraform", query: '"terraform"' },
+    { title: "Terraform", query: "any:terraform,terragrunt" },
     { title: "Rust", query: '"rust"' },
     { title: "Go", query: '"go"' },
     { title: "Zig", query: '"zig"' },
     { title: "Python", query: "python" },
     { title: "Elixir", query: '"elixir"' },
     { title: "Docker", query: '"docker"' },
+    { title: "TUI", query: '"tui"' },
     { title: "Reddit", query: "domain:reddit.com" },
-    { title: "Ansible", query: "ansible" },
+    { title: "Ansible", query: '"ansible"' },
     { title: "Crowd funding", query: "domain:kickstarter.com" },
     { title: "Stack Overflow", query: "domain:stackoverflow.com" },
   ];
@@ -138,11 +189,14 @@ async function fetchNews() {
 
   lists.forEach((ul) => {
     const query = ul.getAttribute("data-query");
-    const url = buildAlgoliaQuery(query);
-    const promise = fetch(url)
-      .then((res) => res.json())
+    const urls = buildAlgoliaQuery(query);
+    const dataPromise = Array.isArray(urls)
+      ? Promise.all(urls.map((u) => fetch(u).then((r) => r.json()))).then(mergeResults)
+      : fetch(urls).then((r) => r.json());
+    const promise = dataPromise
       .then((data) => {
         if (!data.hits || !data.hits.length) return;
+
         const currentSeen = state.seen[query];
         if (currentSeen === undefined) {
           state.seen[query] = data.hits[0].objectID;
@@ -164,16 +218,17 @@ async function fetchNews() {
             href: `https://news.ycombinator.com/item?id=${hit.objectID}`,
             target: "_blank",
           });
-          meta.textContent = `${hit.points}/${hit.num_comments} `;
+          meta.textContent = `${hit.points}/${hit.num_comments}`;
           li.appendChild(meta);
 
+          const title = hit.title.replace(/^(Show HN|Ask HN|Launch HN|Tell HN):\s*/, "");
           const titleLink = createElement("a", {
             className: "title",
             href: link,
             title: hit.title,
             target: "_blank",
           });
-          titleLink.textContent = hit.title;
+          titleLink.textContent = title;
           li.appendChild(titleLink);
 
           ul.appendChild(li);
