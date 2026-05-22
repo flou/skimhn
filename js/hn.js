@@ -38,8 +38,8 @@ function getLayout() {
     { title: "Agile", query: "agile" },
     { title: "Ansible", query: "ansible" },
     { title: "Crystal", query: "\"crystal\"" },
-    { title: "AWS", query: "\"aws\"" }
-    { title: "Elixir", query: "\"elixir\"" }
+    { title: "AWS", query: "\"aws\"" },
+    { title: "Elixir", query: "\"elixir\"" },
     { title: "Swift", query: "\"swift\"" }
   ];
   if ('layout' in localStorage) {
