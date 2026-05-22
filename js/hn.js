@@ -1,82 +1,124 @@
 function convert_to_algolia_query (q) {
-  var api_url = "http://hn.algolia.com/api/v1/search_by_date?tags=story"
-  var query = ""
-  var match = q.match(/^((\w+):)?(.*)$/)
-  var type  = match[2]
-  var topic = match[3]
+  var api_url = "http://hn.algolia.com/api/v1/search_by_date?tags=story";
+  var query = "";
+  var match = q.match(/^((\w+):)?(.*)$/);
+  var type  = match[2];
+  var topic = match[3];
 
   if (type == "domain") {
-    query += "&restrictSearchableAttributes=url" + "&query=" + topic
+    query += "&restrictSearchableAttributes=url&query="
   } else if (type == "points") {
-    query += "&numericFilters=" + type + topic
+    query += "&numericFilters=" + type
   } else {
-    query += "&query=" + topic
+    query += "&query="
   }
-  return api_url + query + "&hitsPerPage=30";
+  return api_url + query + topic + "&hitsPerPage=30";
 }
 
-// default layout
-var layout = [
-  {title: "Show HN", query: "\"Show HN\"" },
-  {title: "GitHub", query: "domain:github.com" },
-  {title: "Ruby, Rails", query: "ruby rails" },
-  {title: "JRuby", query: "jruby" },
-  {title: "Mac OSX", query: "os x" },
-  {title: "Java", query: "java scala" },
-  {title: "Crowd funding", query: "domain:kickstarter.com" },
-  {title: "Javascript", query: "javascript js coffeescript" },
-  {title: "Sublime Text", query: "\"Sublime Text\"" },
-  {title: "Devops", query: "devops" },
-  {title: "Docker", query: "docker" },
-  {title: "Stack Exchange", query: "domain:stackoverflow.com" },
-  {title: "Google Play Store", query: "domain:play.google.com" },
-  {title: "Wikipedia", query: "domain:en.wikipedia.org" },
-  {title: "iTunes", query: "domain:itunes.apple.com" },
-  {title: "Python", query: "python" },
-  {title: "50+ points", query: "points:>50" },
-  {title: "100+ points", query: "points:>100" },
-  {title: "Reddit", query: "domain:reddit.com" },
-  {title: "Stack Overflow", query: "domain:stackoverflow.com" },
-  {title: "Superuser", query: "domain:superuser.com" }
-];
-
-// check if layout is already in localStorage
-if (!('layout' in localStorage)) {
-  localStorage['layout'] = JSON.stringify(layout);
-} else {
-  layout = JSON.parse(localStorage['layout']);
+function getLayout() {
+  var layout = [
+    {title: "Show HN", query: "\"Show HN\"" },
+    {title: "GitHub", query: "domain:github.com" },
+    {title: "Ruby, Rails", query: "ruby rails" },
+    {title: "JRuby", query: "jruby" },
+    {title: "Mac OSX", query: "os x" },
+    {title: "Java", query: "java scala" },
+    {title: "Crowd funding", query: "domain:kickstarter.com" },
+    {title: "Javascript", query: "javascript js coffeescript" },
+    {title: "Sublime Text", query: "\"Sublime Text\"" },
+    {title: "Devops", query: "devops" },
+    {title: "Docker", query: "docker" },
+    {title: "Stack Exchange", query: "domain:stackoverflow.com" },
+    {title: "Google Play Store", query: "domain:play.google.com" },
+    {title: "Wikipedia", query: "domain:en.wikipedia.org" },
+    {title: "iTunes", query: "domain:itunes.apple.com" },
+    {title: "Python", query: "python" },
+    {title: "50+ points", query: "points:>50" },
+    {title: "100+ points", query: "points:>100" },
+    {title: "Reddit", query: "domain:reddit.com" },
+    {title: "Stack Overflow", query: "domain:stackoverflow.com" },
+    {title: "Superuser", query: "domain:superuser.com" }
+  ];
+  if ('layout' in localStorage) {
+    layout = JSON.parse(localStorage['layout']);
+  } else {
+    localStorage['layout'] = JSON.stringify(layout);
+  }
+  return layout;
 }
 
-// initialize 'seen' array for storing last seen ids
-var seen = {};
-if(!('seen' in localStorage)) {
-  localStorage['seen'] = JSON.stringify(seen);
-} else {
-  seen = JSON.parse(localStorage['seen']);
+function getSeen() {
+  var seen = {};
+  if ('seen' in localStorage) {
+    seen = JSON.parse(localStorage['seen']);
+  } else {
+    localStorage['seen'] = JSON.stringify(seen);
+  }
+  return seen;
 }
 
-// setup new window toggle
-var newWindow = false;
-if(!('newWindow' in localStorage)) {
-  localStorage['newWindow'] = JSON.stringify(newWindow);
-} else {
-  newWindow = JSON.parse(localStorage['newWindow']);
+function getNewWindowPreference() {
+  var newWindow = false;
+  if ('newWindow' in localStorage) {
+    newWindow = JSON.parse(localStorage['newWindow']);
+  } else {
+    localStorage['newWindow'] = JSON.stringify(newWindow);
+  }
+  return newWindow;
 }
-$('.toggle-newwindow').prop('checked', newWindow);
-$('.toggle-newwindow').change(function(e) {
+
+function display_news(seen) {
+  $('ul.hnitems').each(function() {
+    var ul = $(this);
+    data_url = convert_to_algolia_query($(this).attr('data-query'));
+    $.ajax({
+      url: data_url,
+      type: 'GET',
+      success: function(data) {
+        var query = ul.attr('data-query');
+        if (!(query in seen)) {
+          seen[query] = data.hits[0].objectID;
+        };
+        for (var i = 0; i < data.hits.length; i++) {
+          var li = $('<li><span class="hnnew"></span><a class="hnscore muted"></a> <a class="hntitle"></a></li>');
+          if (data.hits[i].objectID > seen[query]) {
+            $('span.hnnew', li).text('+ ');
+          }
+          $('a.hnscore', li).text(''+data.hits[i].points+'/'+data.hits[i].num_comments+'').attr('href', 'http://news.ycombinator.com/item?id='+data.hits[i].objectID);
+          $('a.hntitle', li).text(data.hits[i].title).attr('title', data.hits[i].title).attr('href', data.hits[i].url ? data.hits[i].url : 'http://news.ycombinator.com/item?id='+data.hits[i].objectID);
+          if (newWindow) {
+            $('a', li).attr('target', '_blank');
+          }
+          $(ul).append(li);
+        };
+        seen[query] = data.hits[0].objectID;
+        localStorage['seen'] = JSON.stringify(seen);
+      }
+    })
+  });
+}
+var layout = getLayout();
+var seen = getSeen();
+var newWindow = getNewWindowPreference();
+
+var toggleNewWindow = $('.toggle-newwindow');
+toggleNewWindow.prop('checked', newWindow);
+toggleNewWindow.change(function(e) {
   newWindow = newWindow ? false : true;
   localStorage['newWindow'] = JSON.stringify(newWindow);
-  if(newWindow) {
+  if (newWindow) {
     $('.hnitems a').attr('target', '_blank');
   } else {
     $('.hnitems a').removeAttr('target');
   }
 });
-$('.toggle-theme').prop('checked', darkTheme);
-$('.toggle-theme').change(function(e) {
+
+var toggleTheme = $('.toggle-theme');
+toggleTheme.prop('checked', darkTheme);
+toggleTheme.change(function(e) {
   darkTheme = darkTheme ? false : true;
   localStorage['darkTheme'] = JSON.stringify(darkTheme);
-  if(darkTheme) {
+  if (darkTheme) {
     $('body').addClass('skimdark');
   } else {
     $('body').removeClass('skimdark');
@@ -97,6 +139,7 @@ for (var i = 0; i < layout.length; i++) {
     raw = $('<div class="row"></div>');
   };
 };
+
 $('a.hnedit').click(function(e){
   e.preventDefault();
   var i = $(this).attr('data-index');
@@ -127,32 +170,4 @@ $('#add button.btn-primary').click(function(e){
   window.location.reload(false);
 });
 
-// process layout
-$('ul.hnitems').each(function(){
-  var ul = $(this);
-  data_url = convert_to_algolia_query($(this).attr('data-query'));
-  $.ajax({
-    url: data_url,
-    type: 'GET',
-    success: function(data) {
-      var query = ul.attr('data-query');
-      if (!(query in seen)) {
-        seen[query] = data.hits[0].objectID;
-      };
-      for (var i = 0; i < data.hits.length; i++) {
-        var li = $('<li><span class="hnnew"></span><a class="hnscore muted"></a> <a class="hntitle"></a></li>');
-        if (data.hits[i].objectID > seen[query]) {
-          $('span.hnnew', li).text('+ ');
-        }
-        $('a.hnscore', li).text(''+data.hits[i].points+'/'+data.hits[i].num_comments+'').attr('href', 'http://news.ycombinator.com/item?id='+data.hits[i].objectID);
-        $('a.hntitle', li).text(data.hits[i].title).attr('title', data.hits[i].title).attr('href', data.hits[i].url ? data.hits[i].url : 'http://news.ycombinator.com/item?id='+data.hits[i].objectID);
-        if (newWindow) {
-          $('a', li).attr('target', '_blank');
-        }
-        $(ul).append(li);
-      };
-      seen[query] = data.hits[0].objectID;
-      localStorage['seen'] = JSON.stringify(seen);
-    }
-  })
-});
+display_news(seen);
