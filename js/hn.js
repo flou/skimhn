@@ -151,7 +151,7 @@ $('ul.hnitems').each(function(){
         }
         $(ul).append(li);
       };
-      seen[query] = data.hits[0].id;
+      seen[query] = data.hits[0].objectID;
       localStorage['seen'] = JSON.stringify(seen);
     }
   })
