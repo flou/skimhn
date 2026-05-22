@@ -1,5 +1,5 @@
 function convert_to_algolia_query (q) {
-  var api_url = "http://hn.algolia.com/api/v1/search_by_date?tags=story";
+  var api_url = "https://hn.algolia.com/api/v1/search_by_date?tags=story";
   var query = "";
   var match = q.match(/^((\w+):)?(.*)$/);
   var type  = match[2];
@@ -22,7 +22,7 @@ function getLayout() {
     { title: "Ruby on Rails", query: "\"rails\"" },
     { title: "Ruby", query: "\"ruby\"" },
     { title: "Mac OSX", query: "\"os x\"" },
-    { title: "Java", query: "java scala" },
+    { title: "Java", query: "java" },
     { title: "Crowd funding", query: "domain:kickstarter.com" },
     { title: "Javascript", query: "javascript js coffeescript" },
     { title: "Sublime Text", query: "Sublime Text" },
@@ -35,10 +35,12 @@ function getLayout() {
     { title: "100+ points", query: "points:>100" },
     { title: "Reddit", query: "domain:reddit.com" },
     { title: "Stack Overflow", query: "domain:stackoverflow.com" },
-    { title: "Superuser", query: "domain:superuser.com" },
+    { title: "Agile", query: "agile" },
     { title: "Ansible", query: "ansible" },
     { title: "Crystal", query: "\"crystal\"" },
     { title: "AWS", query: "\"aws\"" }
+    { title: "Elixir", query: "\"elixir\"" }
+    { title: "Swift", query: "\"swift\"" }
   ];
   if ('layout' in localStorage) {
     layout = JSON.parse(localStorage['layout']);

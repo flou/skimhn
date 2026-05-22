@@ -1,3 +1,3 @@
 Skim HN
 ======
-Live at http://skimhn.com
+Live at https://skimhn.pancakeapps.com/
